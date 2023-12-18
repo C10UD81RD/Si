@@ -1,0 +1,2 @@
+intel 6 512 nvidia 3000,00 2020
+amd 4 256 radeon 4500,00 2015
