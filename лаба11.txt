@@ -1,110 +1,60 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <locale.h>
+#include <math.h>
 
-struct Computer {
-    char processor[100];
-    int ram;
-    int hdd;
-    char videoAdapter[100];
-    float price;
-    int year;
-};
-
-struct Computer computers[100];
-int count = 0;
-
-void addComputer() {
-    printf("Введите данные о компьютере: \n");
-    printf("Процессор: ");
-    scanf("%s", computers[count].processor);
-    printf("Оперативная память (в ГБ): ");
-    scanf("%d", &computers[count].ram);
-    printf("Жесткий диск (в ГБ): ");
-    scanf("%d", &computers[count].hdd);
-    printf("Видеоадаптер: ");
-    scanf("%s", computers[count].videoAdapter);
-    printf("Стоимость: ");
-    scanf("%f", &computers[count].price);
-    printf("Год закупки: ");
-    scanf("%d", &computers[count].year);
-
-    count++;
-}
-
-void deleteComputer() {
-    int index;
-
-    printf("Введите индекс компьютера, который хотите удалить: ");
-    scanf("%d", &index);
-
-    if (index >= 0 && index < count) {
-        for (int i = index; i < count - 1; i++) {
-            computers[i] = computers[i + 1];
-        }
-        count--;
-        printf("Компьютер успешно удален.\n");
+double f(double x) {
+    if (x >= 0 && x <= 1) {
+        return -cos(exp(x));
+    } else if (x > 1 && x <= 2) {
+        return log(2 * x + sin(x * x));
     } else {
-        printf("Неверный индекс компьютера.\n");
+        return 0;
     }
 }
 
-void showAllComputers() {
-    printf("Список компьютеров: \n");
+double calculate_integral(double a, double b, double h) {
+    double sum = 0;
+    double x;
 
-    for (int i = 0; i < count; i++) {
-        printf("%d. Процессор: %s, Оперативная память: %d ГБ, Жесткий диск: %d ГБ, Видеоадаптер: %s, Стоимость: %.2f, Год закупки: %d\n",
-               i, computers[i].processor, computers[i].ram, computers[i].hdd, computers[i].videoAdapter, computers[i].price, computers[i].year);
+    for (x = a + h/2; x < b; x += h) {
+        sum += f(x);
     }
+
+    return sum * h;
 }
 
-void outdatedComputers() {
-    printf("Список компьютеров, требующих обновления:\n");
+double runge_rule(double a, double b, double h, double e) {
+    double I_h = calculate_integral(a, b, h);
+    double I_h_half = calculate_integral(a, b, h/2);
+    double epsilon = fabs(I_h - I_h_half) / 3;
 
-    for (int i = 0; i < count; i++) {
-        if (computers[i].year < 2018) {
-            printf("Процессор: %s, Оперативная память: %d ГБ, Жесткий диск: %d ГБ, Видеоадаптер: %s, Стоимость: %.2f, Год закупки: %d\n",
-                   computers[i].processor, computers[i].ram, computers[i].hdd, computers[i].videoAdapter, computers[i].price, computers[i].year);
-        }
+    while (epsilon > e) {
+        h /= 2;
+        I_h = calculate_integral(a, b, h);
+        I_h_half = calculate_integral(a, b, h/2);
+        epsilon = fabs(I_h - I_h_half) / 3;
     }
+
+    return I_h;
 }
 
 int main() {
-    char *locale = setlocale(LC_ALL, "");
-    int choice;
+    double a = 0;
+    double b = 2;
+    double h;
+    double e;
 
-    do {
-        printf("\n");
-        printf("1. Просмотреть список компьютеров\n");
-        printf("2. Добавить компьютер\n");
-        printf("3. Удалить компьютер\n");
-        printf("4. Получить данные о компьютерах, требующих обновления\n");
-        printf("0. Выход\n");
-        printf("\n");
-        printf("Выберите действие: ");
-        scanf("%d", &choice);
+    printf("Enter h: ");
+    scanf("%lf", &h);
 
-        switch (choice) {
-            case 1:
-                showAllComputers();
-                break;
-            case 2:
-                addComputer();
-                break;
-            case 3:
-                deleteComputer();
-                break;
-            case 4:
-                outdatedComputers();
-                break;
-            case 0:
-                printf("Программа завершена.\n");
-                break;
-            default:
-                printf("Неверный выбор.\n");
-                break;
-        }
-    } while (choice != 0);
+    printf("Enter e: ");
+    scanf("%lf", &e);
+
+    if (h > 0 && h <= b - a) {
+        double result = runge_rule(a, b, h, e);
+        printf("Approximate value of the integral: %lf\n", result);
+    } else {
+        printf("Invalid value of h\n");
+    }
 
     return 0;
 }
