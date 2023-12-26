@@ -1,0 +1,110 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+
+struct Computer {
+    char processor[100];
+    int ram;
+    int hdd;
+    char videoAdapter[100];
+    float price;
+    int year;
+};
+
+struct Computer computers[100];
+int count = 0;
+
+void addComputer() {
+    printf("Введите данные о компьютере: \n");
+    printf("Процессор: ");
+    scanf("%s", computers[count].processor);
+    printf("Оперативная память (в ГБ): ");
+    scanf("%d", &computers[count].ram);
+    printf("Жесткий диск (в ГБ): ");
+    scanf("%d", &computers[count].hdd);
+    printf("Видеоадаптер: ");
+    scanf("%s", computers[count].videoAdapter);
+    printf("Стоимость: ");
+    scanf("%f", &computers[count].price);
+    printf("Год закупки: ");
+    scanf("%d", &computers[count].year);
+
+    count++;
+}
+
+void deleteComputer() {
+    int index;
+
+    printf("Введите индекс компьютера, который хотите удалить: ");
+    scanf("%d", &index);
+
+    if (index >= 0 && index < count) {
+        for (int i = index; i < count - 1; i++) {
+            computers[i] = computers[i + 1];
+        }
+        count--;
+        printf("Компьютер успешно удален.\n");
+    } else {
+        printf("Неверный индекс компьютера.\n");
+    }
+}
+
+void showAllComputers() {
+    printf("Список компьютеров: \n");
+
+    for (int i = 0; i < count; i++) {
+        printf("%d. Процессор: %s, Оперативная память: %d ГБ, Жесткий диск: %d ГБ, Видеоадаптер: %s, Стоимость: %.2f, Год закупки: %d\n",
+               i, computers[i].processor, computers[i].ram, computers[i].hdd, computers[i].videoAdapter, computers[i].price, computers[i].year);
+    }
+}
+
+void outdatedComputers() {
+    printf("Список компьютеров, требующих обновления:\n");
+
+    for (int i = 0; i < count; i++) {
+        if (computers[i].year < 2018) {
+            printf("Процессор: %s, Оперативная память: %d ГБ, Жесткий диск: %d ГБ, Видеоадаптер: %s, Стоимость: %.2f, Год закупки: %d\n",
+                   computers[i].processor, computers[i].ram, computers[i].hdd, computers[i].videoAdapter, computers[i].price, computers[i].year);
+        }
+    }
+}
+
+int main() {
+    char *locale = setlocale(LC_ALL, "");
+    int choice;
+
+    do {
+        printf("\n");
+        printf("1. Просмотреть список компьютеров\n");
+        printf("2. Добавить компьютер\n");
+        printf("3. Удалить компьютер\n");
+        printf("4. Получить данные о компьютерах, требующих обновления\n");
+        printf("0. Выход\n");
+        printf("\n");
+        printf("Выберите действие: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                showAllComputers();
+                break;
+            case 2:
+                addComputer();
+                break;
+            case 3:
+                deleteComputer();
+                break;
+            case 4:
+                outdatedComputers();
+                break;
+            case 0:
+                printf("Программа завершена.\n");
+                break;
+            default:
+                printf("Неверный выбор.\n");
+                break;
+        }
+    } while (choice != 0);
+
+    return 0;
+}
