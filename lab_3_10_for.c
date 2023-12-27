@@ -17,7 +17,7 @@ int main() {
           printf("x = %lf\t f(x) = %lf\n", x, f);
       }
       // Цикл для вычисления и вывода значений функции при x > 1 && x <= 2
-      for (x = x; x > 1 && x <= 2.0000000001; x += h) {
+      for (x = x; x > 1 && x <= 2+1*1e-10; x += h) {
           f = log(2 * x + sin(x * x));
           printf("x = %lf\t f(x) = %lf\n", x, f);
       }

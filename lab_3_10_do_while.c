@@ -23,7 +23,7 @@ int main() {
             f = log(2 * x + sin(x * x));
             printf("x = %lf\t f(x) = %lf\n", x, f);
             x += h;
-        } while (x <= 2.0000000001);
+        } while (x <= 2+1*1e-10);
     } else printf("h is incorrect");
 
 
